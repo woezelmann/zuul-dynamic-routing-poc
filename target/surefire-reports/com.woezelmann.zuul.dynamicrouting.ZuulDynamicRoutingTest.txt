@@ -1,0 +1,14 @@
+-------------------------------------------------------------------------------
+Test set: com.woezelmann.zuul.dynamicrouting.ZuulDynamicRoutingTest
+-------------------------------------------------------------------------------
+Tests run: 2, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 8.15 sec <<< FAILURE! - in com.woezelmann.zuul.dynamicrouting.ZuulDynamicRoutingTest
+routesToDefault(com.woezelmann.zuul.dynamicrouting.ZuulDynamicRoutingTest)  Time elapsed: 0.222 sec  <<< FAILURE!
+com.github.tomakehurst.wiremock.client.VerificationException: Expected at least one request matching: {
+  "url" : "/green/",
+  "method" : "GET"
+}
+Requests received: [ ]
+	at com.github.tomakehurst.wiremock.client.WireMock.verifyThat(WireMock.java:356)
+	at com.github.tomakehurst.wiremock.client.WireMock.verify(WireMock.java:397)
+	at com.woezelmann.zuul.dynamicrouting.ZuulDynamicRoutingTest.routesToDefault(ZuulDynamicRoutingTest.java:33)
+

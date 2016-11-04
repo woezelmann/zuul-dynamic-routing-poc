@@ -1,0 +1,13 @@
+server:
+  port: 8080
+
+ribbon:
+  eureka:
+    enabled: false
+
+zuul:
+  routes:
+    myservice:
+      path: /**
+      url: http://localhost:8090/green
+      alturl: http://localhost:8090/blue
