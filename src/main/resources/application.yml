@@ -7,7 +7,11 @@ ribbon:
 
 zuul:
   routes:
-    myservice:
-      path: /**
-      url: http://localhost:8090/green
-      alturl: http://localhost:8090/blue
+    routedservice:
+      path: /routed/**
+      url: http://localhost:8090/default
+      alturl: http://localhost:8090/alternative
+
+    simpleservice:
+      path: /simple/**
+      url: http://localhost:8090/simple
