@@ -1,12 +1,8 @@
 package com.woezelmann.zuul.dynamicrouting;
 
-import com.github.tomakehurst.wiremock.matching.RequestPatternBuilder;
-import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -15,12 +11,13 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
 public class ZuulDynamicRoutingPerformanceBenchmark extends AbstractTest {
 
-    private static final int REPETITON_COUNT = 1000;
-
-    private List<Long> startTimes = new ArrayList<Long>();
-    private List<Long> endTimes = new ArrayList<Long>();
+    private static final int REPETITON_COUNT = 10000;
 
     private static boolean warmedUp = false;
+
+    private long startTime;
+    private long endTime;
+
 
     @Before
     public void setUp() throws Exception {
@@ -28,7 +25,7 @@ public class ZuulDynamicRoutingPerformanceBenchmark extends AbstractTest {
 
         warmUpOnce();
 
-        Thread.sleep(5000);
+        Thread.sleep(50000);
 
     }
 
@@ -37,7 +34,7 @@ public class ZuulDynamicRoutingPerformanceBenchmark extends AbstractTest {
             ExecutorService executor = Executors.newFixedThreadPool(16);
             System.out.println("----- WARM UP -----");
 
-            for (int i = 0; i < 50000; i++) {
+            for (int i = 0; i < 5000; i++) {
                 executor.submit(this::callSimple);
                 executor.submit(this::callDefault);
                 executor.submit(this::callAlternative);
@@ -83,22 +80,15 @@ public class ZuulDynamicRoutingPerformanceBenchmark extends AbstractTest {
     }
 
     private void withTimer(Caller caller) {
+        startTime = System.currentTimeMillis();
         for (int i = 0; i < REPETITON_COUNT; i++) {
-            startTimes.add(System.nanoTime());
             caller.doIt();
-            endTimes.add(System.nanoTime());
         }
+        endTime = System.currentTimeMillis();
     }
 
     private void createStatistics(String name) {
-        List<LoggedRequest> loggedRequests = wireMockRule.findAll(RequestPatternBuilder.allRequests());
-
-        long time = 0;
-        for (int i = 0; i < REPETITON_COUNT; i++) {
-            time += endTimes.get(i) - startTimes.get(i);
-        }
-
-        time = TimeUnit.NANOSECONDS.toMillis(time);
+        long time = endTime - startTime;
 
         System.out.println("----- " + name + " -----");
         System.out.println("OverallTime: " + (time) + " ms");
